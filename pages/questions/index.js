@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import Link from 'next/link';
+import { useRouter } from "next/router";
 import Card from "../../components/Card";
 
 const QuestionsContainer = styled.div`
@@ -9,13 +11,20 @@ const QuestionsContainer = styled.div`
     margin: 5%;
 `;
 
+const CardLink = styled.a`
+    text-decoration: none;
+`
+
 function Questions () {
     const [loading, setLoading] = useState(true)
     const [questions, setQuestions] = useState([]);
 
+    const router = useRouter();
+    const { page } = router.query;
+
     useEffect(() => {
         async function fetchData() {
-            const data = await fetch ( `https://api.stackexchange.com/2.2/questions?order=desc&sort=hot&tagged=reactjs&site=stackoverflow`);
+            const data = await fetch ( `https://api.stackexchange.com/2.2/questions?${page ? `page=${page}&` : ''}order=desc&sort=hot&tagged=reactjs&site=stackoverflow `);
             
             const result = await  data.json();
 
@@ -27,7 +36,7 @@ function Questions () {
 
         fetchData();
 
-    }, []);
+    }, [page]);
 
     return (
         <QuestionsContainer>
@@ -35,7 +44,15 @@ function Questions () {
             {loading ? (
                 <span>Loading...</span>
             ) : (<div>{questions.map((question) => (
-                <Card key={question.question_id} title={question.title} views={question.view_count} answers={question.answer_count}/>
+                <Link key={question.question_id} href={`/questions/${question.question_id}`} passHref>
+                    <CardLink>
+                        <Card 
+                            key={question.question_id}
+                            title={question.title}
+                            views={question.view_count}
+                            answers={question.answer_count}/>
+                    </CardLink>
+                </Link>
             ))}</div>)}
         </QuestionsContainer>
     );
