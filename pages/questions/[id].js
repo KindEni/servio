@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import styled from 'styled-components';
 import Card from '../../components/Card';
+import Head from 'next/head';
 
 const QuestionDetailContainer = styled.div`
     display: flex;
@@ -36,11 +37,18 @@ function QuestionDetail() {
         <QuestionDetailContainer>
             <h2>Question: {id}</h2>
             {
-                loading ? (<span>Loading...</span>): (<Card>
+                loading ? (<span>Loading...</span>): (
+                <>
+                    <Head>
+                        <title>{question.title}</title>
+                    </Head>
+                    <Card>
                     title={question.title}
                     views={question.view_count}
                     answers={question.answers_count}
-                </Card>)
+                </Card>
+                </>
+                )
             }
         </QuestionDetailContainer>
     )

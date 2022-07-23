@@ -5,24 +5,25 @@ const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
 `
-const PaginationLink = styled.a`
+const PaginationLink = styled.a` 
     padding: 1%;
     margin: 1%;
-    background: orange;
-    cursor: pointer;
+    background: ${(props) => (!props.disabled ? 'orange' : 'lightGrey')};
+    pointer-events: ${(props) => (!props.disabled ? 'all' : 'none')};
+    cursor: ${(props) => (!props.disabled ? 'pointer' : 'not-allowed')};
     color: white;
     text-decorstion: none;
     border-radius: 5px;
-`
+`;
 
 function Pagination({ currentPage, hasMore }) {
     return(
         <PaginationContainer>
             <Link href={`?page=${parseInt(currentPage) - 1}`}>
-                <PaginationLink>Previous</PaginationLink>
+                <PaginationLink disabled={currentPage <= 1}>Previous</PaginationLink>
             </Link>
             <Link href={`?page=${parseInt(currentPage) + 1}`}>
-                <PaginationLink>Next</PaginationLink>
+                <PaginationLink disabled={!hasMore}>Next</PaginationLink>
             </Link>
         </PaginationContainer>
     )
